@@ -11,7 +11,7 @@ use std::os::unix::fs::OpenOptionsExt;
 use druid::{Data, Lens, Size};
 use platform_dirs::AppDirs;
 use psst_core::{
-    cache::mkdir_if_not_exists,
+    cache::{mkdir_if_not_exists, CacheHandle},
     connection::Credentials,
     player::PlaybackConfig,
     session::{SessionConfig, SessionConnection},
@@ -24,6 +24,8 @@ use crate::ui::theme;
 #[derive(Clone, Debug, Data, Lens)]
 pub struct Preferences {
     pub active: PreferencesTab,
+    #[data(ignore)]
+    pub cache: Option<CacheHandle>,
     pub cache_size: Promise<u64, (), ()>,
     pub auth: Authentication,
     pub lastfm_auth_result: Option<String>,
@@ -124,6 +126,8 @@ pub struct Config {
     pub lastfm_api_key: Option<String>,
     pub lastfm_api_secret: Option<String>,
     pub lastfm_enable: bool,
+    pub discord_rpc_app_id: String,
+    pub discord_rpc_enable: bool,
 }
 
 impl Default for Config {
@@ -146,6 +150,8 @@ impl Default for Config {
             lastfm_api_key: None,
             lastfm_api_secret: None,
             lastfm_enable: false,
+            discord_rpc_app_id: String::new(),
+            discord_rpc_enable: false,
         }
     }
 }
